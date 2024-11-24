@@ -10,4 +10,5 @@ def insert_school(mongo_collection, **kwargs):
     :param kwargs:
     :return:
     """
-    return mongo_collection.insert_one(kwargs)
+    new_documents = mongo_collection.insert_one(kwargs)
+    return new_documents.inserted_id
