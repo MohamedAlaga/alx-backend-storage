@@ -2,7 +2,6 @@
 """ 12. Log stats
 """
 
-
 from pymongo import MongoClient
 
 
