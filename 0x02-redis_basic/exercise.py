@@ -1,7 +1,21 @@
 #!/usr/bin/env python3
 import redis
 import uuid
-from typing import Union, Callable
+from functools import wraps
+from typing import Union, Callable, Any
+
+
+def count_calls(func: Callable) -> Callable:
+    """wrapper to count the number of times a given function is called."""
+
+    @wraps(func)
+    def invoker(self, *args, **kwargs) -> Any:
+        """invoker"""
+        if isinstance(self._redis, redis.Redis):
+            self._redis.incr(func.__qualname__)
+        return func(self, *args, **kwargs)
+
+    return invoker
 
 
 class Cache:
@@ -13,7 +27,7 @@ class Cache:
         """
         self._redis = redis.Redis()
         self._redis.flushdb(True)
-
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """Stores a value in a Redis data storage and returns the key.
         """
