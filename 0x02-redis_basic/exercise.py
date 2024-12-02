@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import redis
 import uuid
-from typing import Union
+from typing import Union, Callable
 
 
 class Cache:
@@ -20,3 +20,23 @@ class Cache:
         data_key = str(uuid.uuid4())
         self._redis.set(data_key, data)
         return data_key
+
+    def get(
+            self,
+            key: str,
+            fn: Callable = None,
+    ) -> Union[str, bytes, int, float]:
+        """Retrieves a value from a Redis data storage using key."""
+        data = self._redis.get(key)
+        if fn is None:
+            return data
+        return fn(data)
+
+    def get_str(self, key: str) -> str:
+        """Retrieves a value from a Redis data storage using key."""
+        return self.get(key, lambda x: x.decode('utf-8'))
+
+    def get_int(self, key: str) -> int:
+        """Retrieves an integer value from a Redis data storage.
+        """
+        return self.get(key, lambda x: int(x))
