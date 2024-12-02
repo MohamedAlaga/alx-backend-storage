@@ -1,18 +1,18 @@
 import redis
 import uuid
-from typing import Any, Callable, Union
+from typing import Union
 
 
 class Cache:
     """
     class to handle caching to redis db
     """
-    _r = redis.Redis()
 
     def __init__(self) -> None:
         """
         method to initialize redis db
         """
+        self._r = redis.Redis()
         self._r.flushdb(True)
 
     def store(self, data: Union[str, bytes, int, float]) -> str:
