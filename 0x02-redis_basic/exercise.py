@@ -4,23 +4,17 @@ from typing import Union
 
 
 class Cache:
+    """Represents an object for storing data in a Redis data storage.
     """
-    class to handle caching to redis db
-    """
-
     def __init__(self) -> None:
+        """Initializes a Cache instance.
         """
-        method to initialize redis db
-        """
-        self._r = redis.Redis()
-        self._r.flushdb(True)
+        self._redis = redis.Redis()
+        self._redis.flushdb(True)
 
     def store(self, data: Union[str, bytes, int, float]) -> str:
+        """Stores a value in a Redis data storage and returns the key.
         """
-        method to store data to redis db
-        :param data: data to store
-        :return: the id of the stored data
-        """
-        key = str(uuid.uuid4())
-        self._r.set(key, data)
-        return key
+        data_key = str(uuid.uuid4())
+        self._redis.set(data_key, data)
+        return data_key
